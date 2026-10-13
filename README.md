@@ -6,6 +6,22 @@ Built on the **Gemini Live API** — three times over, with the same browser and
 
 This repo is adapted from [`live-dj`](https://github.com/cuppibla/live-dj), an interruptible voice-agent demo (a late-night radio DJ). The three-layer structure, barge-in handling, and tool/policy-gate pattern below carry over as-is; the persona, tools, and use cases are being repurposed for healthcare — starting with appointment booking.
 
+## The healthcare agent: [`front_desk/`](front_desk/)
+
+**Ava** answers the phone for a (fictional) family clinic: book / reschedule / cancel visits, register new patients, verify identity, answer hours / insurance / policy questions, send refill requests, hand off to staff — and send anyone describing an emergency to 112 / 108 (Tele-MANAS 14416 for a mental-health crisis). Every tool call passes one policy door (identity required, 3-strike lockout, read-back-before-booking, emergency lock, no controlled-substance refills), and the browser shows a live visit card plus a log of what she did.
+
+```bash
+uv sync
+cp .env.example .env                                     # GOOGLE_API_KEY (AI Studio key)
+uv run uvicorn front_desk.server:app --port 8000         # open http://localhost:8000
+uv run pytest                                            # 38 unit tests
+uv run python -m front_desk.smoke_live --audio           # 8 live end-to-end scenarios
+```
+
+Details, the rules, the wire protocol and the known limits (read them before real patients): **[`front_desk/README.md`](front_desk/README.md)**.
+
+The three DJ builds below are the learning path it was built from — same browser loop, same barge-in, same policy-door pattern.
+
 ## Three builds, one app
 
 | Folder | Episode | What's inside |
